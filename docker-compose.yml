@@ -11,11 +11,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=parse
       - MONGO_INITDB_ROOT_PASSWORD=parse
-  #      - ALLOW_EMPTY_PASSWORD=yes
-  #      - MONGODB_USERNAME=bn_parse
-  #      - MONGODB_DATABASE=bitnami_parse
-  #      - MONGODB_PASSWORD=bitnami123
-  #      - MONGODB_ROOT_PASSWORD=bitnami123
+
   mongo-express:
     image: mongo-express
     restart: always
