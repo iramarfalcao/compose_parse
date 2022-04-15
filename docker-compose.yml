@@ -1,59 +1,32 @@
-version: '3.9'
-
+version: '2'
 services:
-  mongo:
-    image: mongo
-    restart: always
-    ports:
-      - '27017:27017'
+  mongodb:
+    image: 'bitnami/mongodb:latest'
     volumes:
-      - ./mongo_data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=parse
-      - MONGO_INITDB_ROOT_PASSWORD=parse
-
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - '8081:8081'
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: parse
-      ME_CONFIG_MONGODB_ADMINPASSWORD: parse
-      ME_CONFIG_MONGODB_URL: mongodb://parse:parse@mongo:27017/
-
+      - 'mongodb_data:/bitnami'
   parse:
-    image: docker.io/bitnami/parse:5
+    image: 'bitnami/parse:latest'
     ports:
       - '1337:1337'
-    volumes:
-      - './parse_data:/bitnami/parse'
-    depends_on:
-      - mongo
     environment:
-      - PARSE_DATABASE_HOST=mongo
-      - PARSE_DATABASE_PORT_NUMBER=27017
-      - PARSE_DATABASE_USER=parse
-      - PARSE_DATABASE_NAME=parse
-      - PARSE_DATABASE_PASSWORD=parse
-
-#  parse-dashboard:
-#    image: docker.io/bitnami/parse-dashboard:3
-#    ports:
-#      - '4040:4040'
-#    volumes:
-#      - './parse_dashboard_data:/bitnami'
-#    depends_on:
-#      - parse
-
+      - PARSE_ENABLE_CLOUD_CODE=yes
+    volumes:
+      - 'parse_data:/bitnami'
+      - '/path/to/home/directory/cloud:/opt/bitnami/parse/cloud'
+    depends_on:
+      - mongodb
+  parse-dashboard:
+    image: 'bitnami/parse-dashboard:latest'
+    ports:
+      - '4040:4040'
+    volumes:
+      - 'parse_dashboard_data:/bitnami'
+    depends_on:
+      - parse
 volumes:
-  mongo_data:
+  mongodb_data:
     driver: local
-#  parse_data:
-#    driver: local
-#  parse_dashboard_data:
-#    driver: local
-
-networks:
-  parse-network:
-    driver: bridge
+  parse_data:
+    driver: local
+  parse_dashboard_data:
+    driver: local
